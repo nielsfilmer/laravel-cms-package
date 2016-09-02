@@ -44,7 +44,7 @@ abstract class CmsController extends Controller
     /**
      * @var string
      */
-    protected $index_view = "laravel-cms-package::default-resources.list";
+    protected $index_view = "cms-package::default-resources.list";
 
     /**
      * @var string
@@ -69,7 +69,7 @@ abstract class CmsController extends Controller
     /**
      * @var string
      */
-    protected $form_view = 'laravel-cms-package::default-resources.form';
+    protected $form_view = 'cms-package::default-resources.form';
 
     /**
      * @var string
