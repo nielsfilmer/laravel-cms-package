@@ -1,0 +1,1 @@
+<input type="checkbox" class="confirmed-checkbox" data-id="{{ $id }}" @if($confirmed) checked @endif />
