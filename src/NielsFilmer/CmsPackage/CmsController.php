@@ -6,7 +6,7 @@
  * Time: 16:17
  */
 
-namespace TommyClick\Http\Controllers;
+namespace NielsFilmer\CmsPackage;
 
 
 use Illuminate\Http\Request;

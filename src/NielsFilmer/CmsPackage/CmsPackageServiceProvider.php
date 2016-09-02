@@ -1,4 +1,4 @@
-<?php namespace NielsFilmer\EloquentLister;
+<?php namespace NielsFilmer\CmsPackage;
 
 use Illuminate\Support\ServiceProvider;
 

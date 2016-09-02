@@ -6,7 +6,7 @@
  * Time: 11:32
  */
 
-namespace BenfCasting\Forms\Fields;
+namespace NielsFilmer\Forms\Fields;
 
 
 use Kris\LaravelFormBuilder\Fields\FormField;

@@ -6,7 +6,7 @@
  * Time: 14:30
  */
 
-namespace TommyClick\Lists\Columns;
+namespace NielsFilmer\Lists\Columns;
 
 
 use Illuminate\Database\Eloquent\Model;
