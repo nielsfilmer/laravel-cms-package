@@ -189,15 +189,15 @@ abstract class CmsController extends Controller
 
         $object_name = $this->object_name;
 
-        if(false) {
+        if($request->ajax()) {
+            return view($this->index_view, compact('list', 'heading', 'filter', 'show_add', 'args', 'object_name'));
+        } else {
             $layout  = $this->layout;
             $section = $this->section;
             $view    = $this->index_view;
             return view('cms-package::default-resources.layout-extender', compact('list', 'heading', 'filter', 'show_add', 'args', 'object_name', 'layout', 'section', 'view'));
-        } else {
-            return view($this->index_view, compact('list', 'heading', 'filter', 'show_add', 'args', 'object_name'));
         }
-   }
+    }
 
 
     /**
@@ -233,10 +233,14 @@ abstract class CmsController extends Controller
             $breadcrumb = $this->breadcrumbs['create'];
         }
 
-        $layout = $this->layout;
-        $section = $this->section;
-
-        return view($this->form_view, compact('form', 'breadcrumb', 'args', 'layout', 'section'));
+        if($request->ajax()) {
+            return view($this->form_view, compact('form', 'breadcrumb', 'args', 'layout', 'section'));
+        } else {
+            $layout  = $this->layout;
+            $section = $this->section;
+            $view    = $this->form_view;
+            return view('cms-package::default-resources.layout-extender', compact('form', 'breadcrumb', 'args', 'layout', 'section', 'layout', 'section', 'view'));
+        }
     }
 
 
@@ -284,10 +288,14 @@ abstract class CmsController extends Controller
             $breadcrumb = $this->breadcrumbs['edit'];
         }
 
-        $layout = $this->layout;
-        $section = $this->section;
-
-        return view($this->form_view, compact('form', 'breadcrumb', 'model', 'args', 'layout', 'section'));
+        if($request->ajax()) {
+            return view($this->form_view, compact('form', 'breadcrumb', 'model', 'args', 'layout', 'section'));
+        } else {
+            $layout  = $this->layout;
+            $section = $this->section;
+            $view    = $this->form_view;
+            return view('cms-package::default-resources.layout-extender', compact('form', 'breadcrumb', 'model', 'args', 'layout', 'section', 'layout', 'section', 'view'));
+        }
     }
 
 
@@ -297,6 +305,7 @@ abstract class CmsController extends Controller
     public function destroy()
     {
         $id = func_get_arg(0);
+        $request = app(Request::class);
 
         $class = $this->class;
         $model = $class::findOrFail($id);
@@ -304,8 +313,14 @@ abstract class CmsController extends Controller
         $route = Route::getCurrentRoute()->getName();
         $model->delete();
 
-        flash()->success("{$name} was removed");
-        return redirect()->route(str_replace('destroy', 'index', $route));
+        if($request->ajax()) {
+            return response()->json([
+                "message" => "{$name} was removed"
+            ]);
+        } else {
+            flash()->success("{$name} was removed");
+            return redirect()->route(str_replace('destroy', 'index', $route));
+        }
     }
 
 
