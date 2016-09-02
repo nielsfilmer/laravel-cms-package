@@ -188,11 +188,16 @@ abstract class CmsController extends Controller
         }
 
         $object_name = $this->object_name;
-        $layout = $this->layout;
-        $section = $this->section;
 
-        return view($this->index_view, compact('list', 'heading', 'filter', 'show_add', 'args', 'object_name', 'layout', 'section'));
-    }
+        if(false) {
+            $layout  = $this->layout;
+            $section = $this->section;
+            $view    = $this->index_view;
+            return view('cms-package::default-resources.layout-extender', compact('list', 'heading', 'filter', 'show_add', 'args', 'object_name', 'layout', 'section', 'view'));
+        } else {
+            return view($this->index_view, compact('list', 'heading', 'filter', 'show_add', 'args', 'object_name'));
+        }
+   }
 
 
     /**
