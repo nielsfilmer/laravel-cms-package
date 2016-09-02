@@ -101,6 +101,16 @@ abstract class CmsController extends Controller
      */
     protected $default_order_direction = 'desc';
 
+    /**
+     * @var string
+     */
+    protected $layout = 'layouts.app';
+
+    /**
+     * @var string
+     */
+    protected $section = 'content';
+
 
     /**
      * Constructor
@@ -178,8 +188,10 @@ abstract class CmsController extends Controller
         }
 
         $object_name = $this->object_name;
+        $layout = $this->layout;
+        $section = $this->section;
 
-        return view($this->index_view, compact('list', 'heading', 'filter', 'show_add', 'args', 'object_name'));
+        return view($this->index_view, compact('list', 'heading', 'filter', 'show_add', 'args', 'object_name', 'layout', 'section'));
     }
 
 
@@ -216,7 +228,10 @@ abstract class CmsController extends Controller
             $breadcrumb = $this->breadcrumbs['create'];
         }
 
-        return view($this->form_view, compact('form', 'breadcrumb', 'args'));
+        $layout = $this->layout;
+        $section = $this->section;
+
+        return view($this->form_view, compact('form', 'breadcrumb', 'args', 'layout', 'section'));
     }
 
 
@@ -264,7 +279,10 @@ abstract class CmsController extends Controller
             $breadcrumb = $this->breadcrumbs['edit'];
         }
 
-        return view($this->form_view, compact('form', 'breadcrumb', 'model', 'args'));
+        $layout = $this->layout;
+        $section = $this->section;
+
+        return view($this->form_view, compact('form', 'breadcrumb', 'model', 'args', 'layout', 'section'));
     }
 
 
@@ -283,5 +301,20 @@ abstract class CmsController extends Controller
 
         flash()->success("{$name} was removed");
         return redirect()->route(str_replace('destroy', 'index', $route));
+    }
+
+
+    /**
+     * @param Request $request
+     *
+     * @return mixed
+     */
+    protected function validateOnly(Request $request)
+    {
+        if($request->get('validate_only') == 'true') {
+            return response()->json([
+                "message" => "Validation succesful",
+            ]);
+        }
     }
 }

@@ -1,6 +1,6 @@
-@extends('layouts.app')
+@extends($layout)
 
-@section('content')
+@section($section)
     <div class="panel panel-default">
         @if(is_array($heading))
             <ol class="breadcrumb panel-heading">

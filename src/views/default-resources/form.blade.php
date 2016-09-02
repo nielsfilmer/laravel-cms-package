@@ -1,6 +1,6 @@
-@extends('layouts.app')
+@extends($layout)
 
-@section('content')
+@section($section)
     <div class="panel panel-default">
         <ol class="breadcrumb panel-heading">
             @foreach($breadcrumb as $display=>$url)
