@@ -2,7 +2,7 @@
 
 use Illuminate\Support\ServiceProvider;
 
-class EloquentListerServiceProvider extends ServiceProvider {
+class CmsPackageServiceProvider extends ServiceProvider {
 
     /**
      * Indicates if loading of the provider is deferred.
