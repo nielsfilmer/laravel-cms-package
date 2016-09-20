@@ -44,12 +44,12 @@ abstract class CmsController extends Controller
     /**
      * @var string
      */
-    protected $index_view = "cms-package::default-resources.list";
+    protected $list_view = "cms-package::default-resources.list";
 
     /**
      * @var string
      */
-    protected $index_filter;
+    protected $list_filter;
 
     /**
      * @var string
