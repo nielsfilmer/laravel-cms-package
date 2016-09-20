@@ -153,6 +153,9 @@ abstract class CmsController extends Controller
      */
     protected function getListQuery(Request $request, $args = [])
     {
+        if(method_exists($this, 'getCustomListQuery')) {
+            return $this->getCustomListQuery($request,$args);
+        }
         $order = $this->getOrder($request);
         $rpp = $this->getRpp($request);
         $class = $this->class;
@@ -174,14 +177,22 @@ abstract class CmsController extends Controller
 
         $slug = (empty($this->slug)) ? substr($request->getPathInfo(), 1) : $this->slug;
 
+        if (@!$this->listslug) {
+            $listslug = $slug;
+        }
+        else {
+            $listslug = $this->listslug;
+        }
+
         $list = $listbuilder->build(new $this->list_class, $this->getListQuery($request, $args), [
             'show_action' => false,
             'slug' => $slug,
+            'listslug' => $listslug,
         ]);
         $filter = $this->index_filter;
         $show_add = $this->show_add;
 
-        if(method_exists($this, 'getIndexBreadcrumb')) {
+        if (method_exists($this, 'getIndexBreadcrumb')) {
             $heading = $this->getIndexBreadcrumb($request, $args);
         } else {
             $heading = $this->index_heading;
