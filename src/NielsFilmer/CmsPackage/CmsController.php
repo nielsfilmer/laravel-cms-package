@@ -9,6 +9,7 @@
 namespace NielsFilmer\CmsPackage;
 
 
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Route;
@@ -149,7 +150,7 @@ abstract class CmsController extends Controller
     /**
      * @param Request $request
      *
-     * @return mixed
+     * @return LengthAwarePaginator
      */
     protected function getListQuery(Request $request, $args = [])
     {
@@ -184,7 +185,10 @@ abstract class CmsController extends Controller
             $listslug = $this->listslug;
         }
 
-        $list = $listbuilder->build(new $this->list_class, $this->getListQuery($request, $args), [
+        $collection = $this->getListQuery($request, $args);
+        $total = $collection->total();
+
+        $list = $listbuilder->build(new $this->list_class, $collection, [
             'show_action' => false,
             'slug' => $slug,
             'listslug' => $listslug,
@@ -201,12 +205,12 @@ abstract class CmsController extends Controller
         $object_name = $this->object_name;
 
         if($request->ajax()) {
-            return view($this->list_view, compact('list', 'heading', 'filter', 'show_add', 'args', 'object_name'));
+            return view($this->list_view, compact('list', 'heading', 'filter', 'show_add', 'args', 'object_name', 'total'));
         } else {
             $layout  = $this->layout;
             $section = $this->section;
             $view    = $this->list_view;
-            return view('cms-package::default-resources.layout-extender', compact('list', 'heading', 'filter', 'show_add', 'args', 'object_name', 'layout', 'section', 'view'));
+            return view('cms-package::default-resources.layout-extender', compact('list', 'heading', 'filter', 'show_add', 'args', 'object_name', 'layout', 'section', 'view', 'total'));
         }
     }
 
