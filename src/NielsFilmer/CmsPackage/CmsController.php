@@ -177,21 +177,14 @@ abstract class CmsController extends Controller
         $args = func_get_args();
 
         $slug = (empty($this->slug)) ? substr($request->getPathInfo(), 1) : $this->slug;
-
-        if (@!$this->listslug) {
-            $listslug = $slug;
-        }
-        else {
-            $listslug = $this->listslug;
-        }
+        $listslug = (empty($this->list_slug)) ? $slug : $this->list_slug;
 
         $collection = $this->getListQuery($request, $args);
         $total = $collection->total();
 
         $list = $listbuilder->build(new $this->list_class, $collection, [
             'show_action' => false,
-            'slug' => $slug,
-            'listslug' => $listslug,
+            'slug' => $listslug,
         ]);
         $filter = $this->list_filter;
         $show_add = $this->show_add;
