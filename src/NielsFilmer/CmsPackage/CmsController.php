@@ -189,7 +189,7 @@ abstract class CmsController extends Controller
             'slug' => $slug,
             'listslug' => $listslug,
         ]);
-        $filter = $this->index_filter;
+        $filter = $this->list_filter;
         $show_add = $this->show_add;
 
         if (method_exists($this, 'getIndexBreadcrumb')) {
@@ -201,11 +201,11 @@ abstract class CmsController extends Controller
         $object_name = $this->object_name;
 
         if($request->ajax()) {
-            return view($this->index_view, compact('list', 'heading', 'filter', 'show_add', 'args', 'object_name'));
+            return view($this->list_view, compact('list', 'heading', 'filter', 'show_add', 'args', 'object_name'));
         } else {
             $layout  = $this->layout;
             $section = $this->section;
-            $view    = $this->index_view;
+            $view    = $this->list_view;
             return view('cms-package::default-resources.layout-extender', compact('list', 'heading', 'filter', 'show_add', 'args', 'object_name', 'layout', 'section', 'view'));
         }
     }
