@@ -6,7 +6,7 @@
  * Time: 14:30
  */
 
-namespace NielsFilmer\Lists\Columns;
+namespace NielsFilmer\CmsPackage\Lists\Columns;
 
 
 use Illuminate\Database\Eloquent\Model;

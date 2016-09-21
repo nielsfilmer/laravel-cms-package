@@ -6,7 +6,7 @@
  * Time: 15:58
  */
 
-namespace NielsFilmer\Forms\Fields;
+namespace NielsFilmer\CmsPackage\Forms\Fields;
 
 
 use Kris\LaravelFormBuilder\Fields\FormField;
