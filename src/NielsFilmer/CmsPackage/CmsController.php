@@ -154,9 +154,6 @@ abstract class CmsController extends Controller
      */
     protected function getListQuery(Request $request, $args = [])
     {
-        if(method_exists($this, 'getCustomListQuery')) {
-            return $this->getCustomListQuery($request,$args);
-        }
         $order = $this->getOrder($request);
         $rpp = $this->getRpp($request);
         $class = $this->class;
@@ -318,7 +315,7 @@ abstract class CmsController extends Controller
         $class = $this->class;
         $model = $class::findOrFail($id);
         $name = $model->{$this->display_attribute};
-        $route = Route::getCurrentRoute()->getName();
+        $route = (empty($this->route_index)) ? str_replace('destroy', 'index', Route::getCurrentRoute()->getName()) : $this->route_index;
         $model->delete();
 
         if($request->ajax()) {
@@ -327,7 +324,7 @@ abstract class CmsController extends Controller
             ]);
         } else {
             flash()->success("{$name} was removed");
-            return redirect()->route(str_replace('destroy', 'index', $route));
+            return redirect()->route($route);
         }
     }
 
