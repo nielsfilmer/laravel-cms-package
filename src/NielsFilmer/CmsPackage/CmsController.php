@@ -324,7 +324,7 @@ abstract class CmsController extends Controller
             ]);
         } else {
             flash()->success("{$name} was removed");
-            return redirect()->route($route);
+            return redirect()->to($route);
         }
     }
 
