@@ -320,7 +320,7 @@ abstract class CmsController extends Controller
         $class = $this->class;
         $model = $class::findOrFail($id);
         $name = $model->{$this->display_attribute};
-        $route = (empty($this->route_index)) ? str_replace('destroy', 'index', Route::getCurrentRoute()->getName()) : $this->route_index;
+        $route = (empty($this->route_index)) ? route(str_replace('destroy', 'index', Route::getCurrentRoute()->getName())) : $this->route_index;
         $model->delete();
 
         if($request->ajax()) {
