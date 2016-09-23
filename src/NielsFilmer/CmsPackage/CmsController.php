@@ -112,6 +112,11 @@ abstract class CmsController extends Controller
      */
     protected $section = 'content';
 
+    /**
+     * @var int
+     */
+    protected $args_id_index = 0;
+
 
     /**
      * Constructor
@@ -259,7 +264,7 @@ abstract class CmsController extends Controller
         $request = app(Request::class);
         $formbuilder = app(FormBuilder::class);
         $args = func_get_args();
-        $id = $args[0];
+        $id = $args[$this->args_id_index];
 
         $referer = url()->previous();
         $route = Route::getCurrentRoute()->getName();
@@ -309,7 +314,7 @@ abstract class CmsController extends Controller
      */
     public function destroy()
     {
-        $id = func_get_arg(0);
+        $id = func_get_arg($this->args_id_index);
         $request = app(Request::class);
 
         $class = $this->class;
