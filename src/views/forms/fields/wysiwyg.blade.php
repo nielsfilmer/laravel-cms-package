@@ -18,17 +18,6 @@
     </textarea>
 
     @include('laravel-form-builder::help_block')
-
-
-    <script>
-        $(function() {
-            var name = '{{ $name }}';
-            var btns = {!! $options['btns'] !!};
-            $('#trumbowyg-'+name).trumbowyg({
-                btns: btns
-            });
-        });
-    </script>
 @endif
 
 @include('laravel-form-builder::errors')
@@ -38,3 +27,23 @@
         </div>
     @endif
 @endif
+
+
+@section('script')
+
+    @parent
+
+    <script src="{{ asset('assets/js/vendor/trumbowyg.min.js') }}"></script>
+    <script>
+        $(function() {
+            var name = '{{ $name }}';
+            var removeformatPasted = {{ ($options['removeformatPasted']) ? 'true' : 'false' }};
+            var btns = {!! $options['btns'] !!};
+        $('#trumbowyg-'+name).trumbowyg({
+            btns: btns,
+            removeformatPasted: removeformatPasted
+        });
+        });
+    </script>
+
+@endsection

@@ -41,6 +41,8 @@ class WYSIWYG extends FormField
             $options['btns'] = json_encode($this->getOption('btns'));
         }
 
+        $options['removeformatPasted'] = $this->getOption('removeformatPasted', true);
+
         return parent::render($options, $showLabel, $showField, $showError);
     }
 }
