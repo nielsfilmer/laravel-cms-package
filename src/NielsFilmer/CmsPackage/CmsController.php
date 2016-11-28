@@ -192,7 +192,7 @@ abstract class CmsController extends Controller
         $show_add = $this->show_add;
 
         if (method_exists($this, 'getIndexBreadcrumb')) {
-            $heading = $this->getIndexBreadcrumb($request, $args);
+            $heading = $this->getIndexBreadcrumb($request, $args, $total);
         } else {
             $heading = $this->index_heading;
         }
