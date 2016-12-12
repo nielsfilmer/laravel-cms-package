@@ -200,12 +200,12 @@ abstract class CmsController extends Controller
         $object_name = $this->object_name;
 
         if($request->ajax()) {
-            return view($this->list_view, compact('list', 'heading', 'filter', 'show_add', 'args', 'object_name', 'total'));
+            return view($this->list_view, compact('list', 'heading', 'filter', 'show_add', 'args', 'object_name', 'total', 'request'));
         } else {
             $layout  = $this->layout;
             $section = $this->section;
             $view    = $this->list_view;
-            return view('cms-package::default-resources.layout-extender', compact('list', 'heading', 'filter', 'show_add', 'args', 'object_name', 'layout', 'section', 'view', 'total'));
+            return view('cms-package::default-resources.layout-extender', compact('list', 'heading', 'filter', 'show_add', 'args', 'object_name', 'layout', 'section', 'view', 'total', 'request'));
         }
     }
 
@@ -244,12 +244,12 @@ abstract class CmsController extends Controller
         }
 
         if($request->ajax()) {
-            return view($this->form_view, compact('form', 'breadcrumb', 'args', 'layout', 'section'));
+            return view($this->form_view, compact('form', 'breadcrumb', 'args', 'layout', 'section', 'request'));
         } else {
             $layout  = $this->layout;
             $section = $this->section;
             $view    = $this->form_view;
-            return view('cms-package::default-resources.layout-extender', compact('form', 'breadcrumb', 'args', 'layout', 'section', 'layout', 'section', 'view'));
+            return view('cms-package::default-resources.layout-extender', compact('form', 'breadcrumb', 'args', 'layout', 'section', 'layout', 'section', 'view', 'request'));
         }
     }
 
@@ -299,12 +299,12 @@ abstract class CmsController extends Controller
         }
 
         if($request->ajax()) {
-            return view($this->form_view, compact('form', 'breadcrumb', 'model', 'args', 'layout', 'section'));
+            return view($this->form_view, compact('form', 'breadcrumb', 'model', 'args', 'layout', 'section', 'request'));
         } else {
             $layout  = $this->layout;
             $section = $this->section;
             $view    = $this->form_view;
-            return view('cms-package::default-resources.layout-extender', compact('form', 'breadcrumb', 'model', 'args', 'layout', 'section', 'layout', 'section', 'view'));
+            return view('cms-package::default-resources.layout-extender', compact('form', 'breadcrumb', 'model', 'args', 'layout', 'section', 'layout', 'section', 'view', 'request'));
         }
     }
 
