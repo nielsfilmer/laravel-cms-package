@@ -115,7 +115,7 @@ abstract class CmsController extends Controller
     /**
      * @var int
      */
-    protected $args_id_index = 0;
+    protected $args_id_index = null;
 
 
     /**
@@ -229,7 +229,7 @@ abstract class CmsController extends Controller
             $form_data = ['prev_url' => $referer];
         }
 
-        $url = (empty($this->route_store)) ? route(str_replace('create', 'store', $route)) : $this->route_store;
+        $url = (empty($this->route_store)) ? route(str_replace('create', 'store', $route), $args) : $this->route_store;
 
         $form = $formbuilder->create($this->form_class, [
             'method' => 'POST',
@@ -264,7 +264,12 @@ abstract class CmsController extends Controller
         $request = app(Request::class);
         $formbuilder = app(FormBuilder::class);
         $args = func_get_args();
-        $id = $args[$this->args_id_index];
+
+        if(is_null($this->args_id_index)) {
+            $id = end($args);
+        } else {
+            $id = $args[$this->args_id_index];
+        }
 
         $referer = url()->previous();
         $route = Route::getCurrentRoute()->getName();
@@ -283,7 +288,7 @@ abstract class CmsController extends Controller
             $form_data = ['prev_url' => $referer];
         }
 
-        $url = (empty($this->route_edit)) ? route(str_replace('edit', 'update', $route), $id) : $this->route_edit;
+        $url = (empty($this->route_update)) ? route(str_replace('edit', 'update', $route), $args) : $this->route_update;
 
         $form = $formbuilder->create($this->form_class, [
             'method' => 'PUT',
@@ -314,7 +319,12 @@ abstract class CmsController extends Controller
      */
     public function destroy()
     {
-        $id = func_get_arg($this->args_id_index);
+        if(is_null($this->args_id_index)) {
+            $id = end($args);
+        } else {
+            $id = func_get_arg($this->args_id_index);
+        }
+
         $request = app(Request::class);
 
         $class = $this->class;
