@@ -320,7 +320,8 @@ abstract class CmsController extends Controller
     public function destroy()
     {
         if(is_null($this->args_id_index)) {
-            $id = end(func_get_args());
+            $args = func_get_args();
+            $id = end($args);
         } else {
             $id = func_get_arg($this->args_id_index);
         }
