@@ -184,9 +184,16 @@ abstract class CmsController extends Controller
         $collection = $this->getListQuery($request, $args);
         $total = $collection->total();
 
+        if(method_exists($this, 'getListData')) {
+            $list_data = $this->getListData($request, $args);
+        } else {
+            $list_data = [];
+        }
+
         $list = $listbuilder->build(new $this->list_class, $collection, [
             'show_action' => false,
             'slug' => $listslug,
+            'data' => $list_data,
         ]);
         $filter = $this->list_filter;
         $show_add = $this->show_add;
