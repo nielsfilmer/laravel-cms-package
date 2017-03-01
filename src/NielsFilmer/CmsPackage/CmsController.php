@@ -90,7 +90,7 @@ abstract class CmsController extends Controller
     /**
      * @var string
      */
-    protected $object_name = 'Object';
+    protected $object_name;
 
     /**
      * @var string
@@ -123,7 +123,13 @@ abstract class CmsController extends Controller
      */
     public function __construct()
     {
+        if(is_null($this->object_name)) {
+            $this->object_name = class_basename($this->class);
+        }
 
+        if(is_null($this->index_heading)) {
+            $this->index_heading = str_plural($this->object_name);
+        }
     }
 
 
