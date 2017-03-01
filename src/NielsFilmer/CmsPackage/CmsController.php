@@ -31,18 +31,6 @@ abstract class CmsController extends Controller
     protected $index_heading;
 
     /**
-     * @var array
-     */
-    protected $breadcrumbs = [
-        'create' => [
-            'New object' => null
-        ],
-        'edit' => [
-            'Edit object' => null,
-        ],
-    ];
-
-    /**
      * @var string
      */
     protected $list_view = "cms-package::default-resources.list";
@@ -253,7 +241,10 @@ abstract class CmsController extends Controller
         if(method_exists($this, 'getCreateBreadcrumb')) {
             $breadcrumb = $this->getCreateBreadcrumb($request, $args);
         } else {
-            $breadcrumb = $this->breadcrumbs['create'];
+            $breadcrumb = [
+                $this->index_heading => route(str_replace('create', 'index', $route)),
+                "New {$this->object_name}" => null,
+            ];
         }
 
         if($request->ajax()) {
@@ -313,7 +304,12 @@ abstract class CmsController extends Controller
         if(method_exists($this, 'getEditBreadcrumb')) {
             $breadcrumb = $this->getEditBreadcrumb($model, $request, $args);
         } else {
-            $breadcrumb = $this->breadcrumbs['edit'];
+            $display_attribute = $this->display_attribute;
+            $name = $model->$display_attribute;
+            $breadcrumb = [
+                $this->index_heading => route(str_replace('edit', 'index', $route)),
+                "Editting {$this->object_name} '{$name}'" => null,
+            ];
         }
 
         if($request->ajax()) {
