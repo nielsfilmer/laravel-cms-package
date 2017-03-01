@@ -18,7 +18,7 @@
     "require": {
         "php": ">=5.6.0",
         "nielsfilmer/eloquent-lister": "dev-master",
-        "kris/laravel-form-builder": "^1.8",
+        "kris/laravel-form-builder": "^1.11",
         "laracasts/flash": "^2.0",
         "illuminate/support": "5.*",
         "illuminate/view": "5.*",
