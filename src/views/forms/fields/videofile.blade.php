@@ -10,8 +10,9 @@
 
 @if ($showField)
     @if(!empty($options['value']))
+        <br>
         <video width="360" controls class="form-video-file">
-            <source src="{{ $options['value'] }}" type="{{ $option['mime-type'] }}">
+            <source src="{{ $options['value'] }}" type="{{ $options['mime-type'] }}">
         </video>
     @endif
 

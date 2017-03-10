@@ -10,6 +10,7 @@
 
 @if ($showField)
     @if(!empty($options['value']))
+        <br>
         <audio controls class="form-audio-file">
             <source src="{{ $options['value'] }}" type="{{ $options['mime-type'] }}">
             Your browser does not support the audio element.
