@@ -12,7 +12,7 @@ namespace NielsFilmer\CmsPackage\Forms\Fields;
 use Kris\LaravelFormBuilder\Fields\FormField;
 use Kris\LaravelFormBuilder\Form;
 
-class ImageFile extends FileField
+class AudioFile extends FileField
 {
     /**
      * Returns the template for this field
@@ -21,7 +21,7 @@ class ImageFile extends FileField
      */
     protected function getTemplate()
     {
-        return 'cms-package::forms.fields.imagefile';
+        return 'cms-package::forms.fields.audiofile';
     }
 
 
@@ -35,7 +35,11 @@ class ImageFile extends FileField
      */
     public function render(array $options = [], $showLabel = true, $showField = true, $showError = true)
     {
-        $options['attr']['accept'] = 'image/*';
+        if(!isset($options['mime-type'])) {
+            $options['mime-type'] = 'video/mp3';
+        }
+
+        $options['attr']['accept'] = 'audio/*';
 
         return parent::render($options, $showLabel, $showField, $showError);
     }

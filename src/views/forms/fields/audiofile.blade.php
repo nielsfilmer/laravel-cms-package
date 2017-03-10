@@ -10,9 +10,10 @@
 
 @if ($showField)
     @if(!empty($options['value']))
-        <div>
-            <img src="{{ $options['value'] }}" class="form-image-file" />
-        </div>
+        <audio controls class="form-audio-file">
+            <source src="{{ $options['value'] }}" type="{{ $options['mime-type'] }}">
+            Your browser does not support the audio element.
+        </audio>
     @endif
 
     @if($options['editable'])

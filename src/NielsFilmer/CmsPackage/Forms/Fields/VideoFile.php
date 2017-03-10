@@ -2,18 +2,17 @@
 /**
  * Created by PhpStorm.
  * User: nielsfilmer
- * Date: 12/02/16
- * Time: 10:06
+ * Date: 12/12/16
+ * Time: 16:40
  */
 
 namespace NielsFilmer\CmsPackage\Forms\Fields;
 
 
 use Kris\LaravelFormBuilder\Fields\FormField;
-use Kris\LaravelFormBuilder\Form;
 
-class ImageFile extends FileField
-{
+class VideoFile extends FormField {
+
     /**
      * Returns the template for this field
      *
@@ -21,7 +20,7 @@ class ImageFile extends FileField
      */
     protected function getTemplate()
     {
-        return 'cms-package::forms.fields.imagefile';
+        return 'cms-package::forms.fields.videofile';
     }
 
 
@@ -35,8 +34,13 @@ class ImageFile extends FileField
      */
     public function render(array $options = [], $showLabel = true, $showField = true, $showError = true)
     {
-        $options['attr']['accept'] = 'image/*';
+        if(!isset($options['mime-type'])) {
+            $options['mime-type'] = 'video/mp4';
+        }
+
+        $options['attr']['accept'] = 'video/*';
 
         return parent::render($options, $showLabel, $showField, $showError);
     }
+
 }

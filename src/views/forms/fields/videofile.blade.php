@@ -10,9 +10,9 @@
 
 @if ($showField)
     @if(!empty($options['value']))
-        <div>
-            <img src="{{ $options['value'] }}" class="form-image-file" />
-        </div>
+        <video width="360" controls class="form-video-file">
+            <source src="{{ $options['value'] }}" type="{{ $option['mime-type'] }}">
+        </video>
     @endif
 
     @if($options['editable'])
