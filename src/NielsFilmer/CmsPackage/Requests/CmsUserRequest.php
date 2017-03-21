@@ -1,6 +1,6 @@
 <?php
 
-namespace VodafoneStutter\Http\Requests\Cms;
+namespace NielsFilmer\CmsPackage\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -28,7 +28,7 @@ class CmsUserRequest extends FormRequest
             case 'PUT':
             case 'PATCH':
                 $emailrule = "max:255|email|unique:users,email,{$this->user}";
-                $passwordrule = 'confirmed|min:8|not_in:password,12345678,qwertyui';
+                $passwordrule = 'confirmed|not_in:password,12345678,qwertyui';
                 break;
             case 'POST':
             default:

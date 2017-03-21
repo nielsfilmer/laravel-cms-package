@@ -11,7 +11,7 @@ namespace NielsFilmer\CmsPackage;
 
 use Illuminate\Http\Request;
 use NielsFilmer\CmsPackage\Forms\CmsUserForm;
-use VodafoneStutter\Http\Requests\Cms\CmsUserRequest;
+use NielsFilmer\CmsPackage\Requests\CmsUserRequest;
 use NielsFilmer\CmsPackage\Lists\CmsUsersList;
 
 class CmsUsersController extends CmsController
@@ -54,10 +54,10 @@ class CmsUsersController extends CmsController
 
 
     /**
-     * @param CmsUser $user
+     * @param $user
      * @param Request $request
      *
-     * @return CmsUser
+     * @return mixed
      */
     protected function saveUserModel($user, Request $request)
     {

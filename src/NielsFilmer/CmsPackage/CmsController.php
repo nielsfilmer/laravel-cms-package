@@ -170,7 +170,7 @@ abstract class CmsController extends Controller
     {
         $request = app(Request::class);
         $listbuilder = app(ListBuilder::class);
-        $args = func_get_args();
+        $args = $request->route()->parameters();
 
         $slug = (empty($this->slug)) ? substr($request->getPathInfo(), 1) : $this->slug;
         $listslug = (empty($this->list_slug)) ? $slug : $this->list_slug;
@@ -218,7 +218,7 @@ abstract class CmsController extends Controller
     {
         $request = app(Request::class);
         $formbuilder = app(FormBuilder::class);
-        $args = func_get_args();
+        $args = $request->route()->parameters();
         $referer = url()->previous();
 
         $route = Route::getCurrentRoute()->getName();
@@ -265,9 +265,10 @@ abstract class CmsController extends Controller
      */
     public function edit()
     {
+        /** @var Request $request */
         $request = app(Request::class);
         $formbuilder = app(FormBuilder::class);
-        $args = func_get_args();
+        $args = $request->route()->parameters();
 
         if(is_null($this->args_id_index)) {
             $id = end($args);
@@ -328,14 +329,13 @@ abstract class CmsController extends Controller
      */
     public function destroy()
     {
+        $request = app(Request::class);
         if(is_null($this->args_id_index)) {
-            $args = func_get_args();
+            $args = $request->route()->parameters();
             $id = end($args);
         } else {
-            $id = func_get_arg($this->args_id_index);
+            $id = $request->route()->parameter($this->args_id_index);
         }
-
-        $request = app(Request::class);
 
         $class = $this->class;
         $model = $class::findOrFail($id);
