@@ -23,7 +23,9 @@
         "illuminate/support": "5.*",
         "illuminate/view": "5.*",
         "illuminate/database": "5.*",
-        "illuminate/http": "5.*"
+        "illuminate/http": "5.*",
+        "illuminate/bus": "5.*",
+        "intervention/image": "^2.3"
     },
     "autoload": {
         "psr-4": {
