@@ -74,7 +74,7 @@ trait StoresAndUpdatesModels
         if(isset($this->validation_rules)) {
             $validation_rules = $this->validation_rules;
             if(isset($validation_rules[$method]) && is_array($validation_rules[$method])) {
-                $validation_rules = $validation_rules['store'];
+                $validation_rules = $validation_rules[$method];
             }
 
             $this->validate($request, $validation_rules);
