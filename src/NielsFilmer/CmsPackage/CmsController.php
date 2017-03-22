@@ -247,7 +247,7 @@ abstract class CmsController extends Controller
             $breadcrumb = $this->getCreateBreadcrumb($request, $args);
         } else {
             $breadcrumb = [
-                $this->index_heading => route(str_replace('create', 'index', $route)),
+                $this->index_heading => route(str_replace('create', 'index', $route), $args),
                 "New {$this->object_name}" => null,
             ];
         }
@@ -313,7 +313,7 @@ abstract class CmsController extends Controller
             $display_attribute = $this->display_attribute;
             $name = $model->$display_attribute;
             $breadcrumb = [
-                $this->index_heading => route(str_replace('edit', 'index', $route)),
+                $this->index_heading => route(str_replace('edit', 'index', $route), $args),
                 "Editting {$this->object_name} '{$name}'" => null,
             ];
         }
