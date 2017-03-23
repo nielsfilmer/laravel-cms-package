@@ -110,6 +110,11 @@ abstract class CmsController extends Controller
      */
     protected $args_id_index = null;
 
+    /**
+     * @var array
+     */
+    protected $parents = [];
+
 
     /**
      * Constructor
@@ -200,7 +205,7 @@ abstract class CmsController extends Controller
         if (method_exists($this, 'getIndexBreadcrumb')) {
             $heading = $this->getIndexBreadcrumb($request, $args, $total);
         } else {
-            $heading = $this->index_heading;
+            $heading = $this->makeBreadcrumb('create', $args, $total);
         }
 
         $object_name = $this->object_name;
@@ -246,10 +251,7 @@ abstract class CmsController extends Controller
         if(method_exists($this, 'getCreateBreadcrumb')) {
             $breadcrumb = $this->getCreateBreadcrumb($request, $args);
         } else {
-            $breadcrumb = [
-                $this->index_heading => route(str_replace('create', 'index', $route), $args),
-                "New {$this->object_name}" => null,
-            ];
+            $breadcrumb = $this->makeBreadcrumb('create', $args);
         }
 
         if($request->ajax()) {
@@ -312,10 +314,7 @@ abstract class CmsController extends Controller
         } else {
             $display_attribute = $this->display_attribute;
             $name = $model->$display_attribute;
-            $breadcrumb = [
-                $this->index_heading => route(str_replace('edit', 'index', $route), $args),
-                "Editting {$this->object_name} '{$name}'" => null,
-            ];
+            $breadcrumb = $this->makeBreadcrumb('edit', $args, $name);
         }
 
         if($request->ajax()) {
@@ -356,6 +355,52 @@ abstract class CmsController extends Controller
             flash()->success("{$name} was removed");
             return redirect()->to($route);
         }
+    }
+
+
+    /**
+     * Smart breadcrumb creation
+     *
+     * @param $mode
+     * @param $args
+     * @param null $extra
+     * @return array
+     */
+    protected function makeBreadcrumb($mode, $args, $extra = null)
+    {
+        $breadcrumb = [];
+        if(count($this->parents) > 0) {
+            foreach($this->parents as $parent) {
+                $parent_class = $parent['class'];
+                $parent_base_class = class_basename($parent_class);
+                $parent_model = $parent_class::findOrFail($args[strtolower($parent_base_class)]);
+                $display_attribute = $parent['display_attribute'];
+                $breadcrumb[str_plural($parent_base_class)] = route($parent['index']);
+                $breadcrumb[$parent_model->$display_attribute] = null;
+            }
+        }
+
+        $current_route = Route::getCurrentRoute()->getName();
+        $base_class = class_basename($this->class);
+
+        switch($mode) {
+            case 'index':
+                $breadcrumb["{$this->index_heading} ({$extra})"] = null;
+                break;
+            case 'edit':
+                unset($args[strtolower($base_class)]);
+                $breadcrumb[$this->index_heading] = route(str_replace('edit', 'index', $current_route), $args);
+                $breadcrumb["Editting {$this->object_name} '{$extra}'"] = null;
+                break;
+            case 'create':
+            default:
+                unset($args[strtolower($base_class)]);
+                $breadcrumb[$this->index_heading] = route(str_replace('edit', 'index', $current_route), $args);
+                $breadcrumb["New {$this->object_name}"] = null;
+                break;
+        }
+
+        return $breadcrumb;
     }
 
 
