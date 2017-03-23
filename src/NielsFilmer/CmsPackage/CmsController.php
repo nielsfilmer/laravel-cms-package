@@ -381,21 +381,20 @@ abstract class CmsController extends Controller
         }
 
         $current_route = Route::getCurrentRoute()->getName();
-        $base_class = class_basename($this->class);
 
         switch($mode) {
             case 'index':
                 $breadcrumb["{$this->index_heading} ({$extra})"] = null;
                 break;
             case 'edit':
-                unset($args[strtolower($base_class)]);
+                unset($args[strtolower($this->object_name)]);
                 $breadcrumb[$this->index_heading] = route(str_replace('edit', 'index', $current_route), $args);
                 $breadcrumb["Editting {$this->object_name} '{$extra}'"] = null;
                 break;
             case 'create':
             default:
-                unset($args[strtolower($base_class)]);
-                $breadcrumb[$this->index_heading] = route(str_replace('edit', 'index', $current_route), $args);
+                unset($args[strtolower($this->object_name)]);
+                $breadcrumb[$this->index_heading] = route(str_replace('create', 'index', $current_route), $args);
                 $breadcrumb["New {$this->object_name}"] = null;
                 break;
         }
