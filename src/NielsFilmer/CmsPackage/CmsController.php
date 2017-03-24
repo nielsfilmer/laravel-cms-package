@@ -205,7 +205,7 @@ abstract class CmsController extends Controller
         if (method_exists($this, 'getIndexBreadcrumb')) {
             $heading = $this->getIndexBreadcrumb($request, $args, $total);
         } else {
-            $heading = $this->makeBreadcrumb('create', $args, $total);
+            $heading = $this->makeBreadcrumb('index', $args, $total);
         }
 
         $object_name = $this->object_name;
@@ -334,17 +334,18 @@ abstract class CmsController extends Controller
     public function destroy()
     {
         $request = app(Request::class);
+        $args = $request->route()->parameters();
         if(is_null($this->args_id_index)) {
-            $args = $request->route()->parameters();
             $id = end($args);
         } else {
-            $id = $request->route()->parameter($this->args_id_index);
+            $id = $args[$this->args_id_index];
         }
 
         $class = $this->class;
         $model = $class::findOrFail($id);
         $name = $model->{$this->display_attribute};
-        $route = (empty($this->route_index)) ? route(str_replace('destroy', 'index', Route::getCurrentRoute()->getName())) : $this->route_index;
+        $class_basename = snake_case(class_basename($this->class));
+        $route = (empty($this->route_index)) ? route(str_replace('destroy', 'index', Route::getCurrentRoute()->getName()), $args) : $this->route_index;
         $model->delete();
 
         if($request->ajax()) {
@@ -381,19 +382,20 @@ abstract class CmsController extends Controller
         }
 
         $current_route = Route::getCurrentRoute()->getName();
+        $class_basename = class_basename($this->class);
 
         switch($mode) {
             case 'index':
                 $breadcrumb["{$this->index_heading} ({$extra})"] = null;
                 break;
             case 'edit':
-                unset($args[strtolower($this->object_name)]);
+                unset($args[snake_case($class_basename)]);
                 $breadcrumb[$this->index_heading] = route(str_replace('edit', 'index', $current_route), $args);
                 $breadcrumb["Editting {$this->object_name} '{$extra}'"] = null;
                 break;
             case 'create':
             default:
-                unset($args[strtolower($this->object_name)]);
+                unset($args[snake_case($class_basename)]);
                 $breadcrumb[$this->index_heading] = route(str_replace('create', 'index', $current_route), $args);
                 $breadcrumb["New {$this->object_name}"] = null;
                 break;
