@@ -345,6 +345,7 @@ abstract class CmsController extends Controller
         $model = $class::findOrFail($id);
         $name = $model->{$this->display_attribute};
         $class_basename = snake_case(class_basename($this->class));
+        unset($args[snake_case($class_basename)]);
         $route = (empty($this->route_index)) ? route(str_replace('destroy', 'index', Route::getCurrentRoute()->getName()), $args) : $this->route_index;
         $model->delete();
 
