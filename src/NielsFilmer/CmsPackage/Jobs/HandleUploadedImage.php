@@ -51,7 +51,7 @@ class HandleUploadedImage
         $storage    = app(FilesystemManager::class);
         $width      = $this->config['size']['width'];
         $height     = $this->config['size']['height'];
-        $local_path = dispatch( new ResizeUploadedImage( $this->file, $width, $height ) );
+        $local_path = dispatch( new ResizeUploadedImage( $this->file, $width, $height, $this->extension ) );
         $filename   = bin2hex( openssl_random_pseudo_bytes( 16 ) ) . ".{$this->extension}";
         $image_path = "{$this->config['path']}/{$filename}";
         $storage->cloud()->put( $image_path, fopen( $local_path, 'r' ) );

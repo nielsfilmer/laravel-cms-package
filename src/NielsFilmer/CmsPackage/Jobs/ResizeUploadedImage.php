@@ -27,17 +27,24 @@ class ResizeUploadedImage
     protected $height;
 
     /**
+     * @var string
+     */
+    protected $extension;
+
+    /**
      * Create a new job instance.
      *
-     * @param $file
+     * @param UploadedFile $file
      * @param $width
      * @param null $height
+     * @param string $extension
      */
-    public function __construct(UploadedFile $file, $width = null, $height = null)
+    public function __construct(UploadedFile $file, $width = null, $height = null, $extension = "jpg")
     {
         $this->file = $file;
         $this->width = $width;
         $this->height = $height;
+        $this->extension = $extension;
     }
 
     /**
@@ -47,7 +54,7 @@ class ResizeUploadedImage
     {
         $tmp_dir = config('filesystems.disks.local.root') . "/temp";
         if(!is_dir($tmp_dir)) mkdir($tmp_dir);
-        $tmpfile = "$tmp_dir/" . uniqid('image-') . ".jpg";
+        $tmpfile = "$tmp_dir/" . uniqid('image-') . ".{$this->extension}";
 
         $image = Image::make($this->file->getPathname());
 
