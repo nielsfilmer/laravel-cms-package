@@ -34,7 +34,7 @@ class HandleUploadedImage
      * @param array $config
      * @param $extension
      */
-    public function __construct(UploadedFile $file, array $config, $extension = 'jpg')
+    public function __construct(UploadedFile $file, array $config, $extension = null)
     {
         $this->config = $config;
         $this->file = $file;
@@ -49,10 +49,17 @@ class HandleUploadedImage
     public function handle()
     {
         $storage    = app(FilesystemManager::class);
-        $width      = $this->config['size']['width'];
-        $height     = $this->config['size']['height'];
-        $local_path = dispatch( new ResizeUploadedImage( $this->file, $width, $height, $this->extension ) );
-        $filename   = bin2hex( openssl_random_pseudo_bytes( 16 ) ) . ".{$this->extension}";
+        $extension = (is_null($this->extension)) ? $this->file->getClientOriginalExtension() : $this->extension;
+
+        if(isset($this->config['size'])) {
+            $width      = $this->config['size']['width'];
+            $height     = $this->config['size']['height'];
+            $local_path = dispatch( new ResizeUploadedImage( $this->file, $width, $height, $extension ) );
+        } else {
+            $local_path = $this->file->getPathname();
+        }
+
+        $filename   = bin2hex( openssl_random_pseudo_bytes( 16 ) ) . ".{$extension}";
         $image_path = "{$this->config['path']}/{$filename}";
         $storage->cloud()->put( $image_path, fopen( $local_path, 'r' ) );
         // todo: WHY O WHY DOES THIS DO Text File Busy on my windows machine
