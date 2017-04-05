@@ -68,9 +68,9 @@ trait StoresAndUpdatesModels
      *
      * @param Request $request
      * @param $method
-     * @param Model $model
+     * @param $key
      */
-    protected function checkValidation(Request $request, $method, Model $model = null)
+    protected function checkValidation(Request $request, $method, $key = null)
     {
         if(isset($this->validation_rules)) {
             $validation_rules = $this->validation_rules;
@@ -80,7 +80,7 @@ trait StoresAndUpdatesModels
 
             if($model) {
                 foreach($validation_rules as $attribute=>&$rules) {
-                    $rules = str_replace('{key}', $model->getKey(), $rules);
+                    $rules = str_replace('{key}', $key, $rules);
                 }
             }
 
