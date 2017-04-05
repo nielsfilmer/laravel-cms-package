@@ -47,13 +47,13 @@ trait StoresAndUpdatesModels
         $args = $request->route()->parameters();
         $class = $this->class;
 
-        $this->checkValidation($request, 'update');
-
         if(is_null($this->args_id_index)) {
             $id = end($args);
         } else {
             $id = $args[$this->args_id_index];
         }
+
+        $this->checkValidation($request, 'update', $id);
 
         $model = $class::findOrFail($id);
         $model = $this->saveModel($model, $request);
@@ -68,13 +68,20 @@ trait StoresAndUpdatesModels
      *
      * @param Request $request
      * @param $method
+     * @param Model $model
      */
-    protected function checkValidation(Request $request, $method)
+    protected function checkValidation(Request $request, $method, Model $model = null)
     {
         if(isset($this->validation_rules)) {
             $validation_rules = $this->validation_rules;
             if(isset($validation_rules[$method]) && is_array($validation_rules[$method])) {
                 $validation_rules = $validation_rules[$method];
+            }
+
+            if($model) {
+                foreach($validation_rules as $attribute=>&$rules) {
+                    $rules = str_replace('{key}', $model->getKey(), $rules);
+                }
             }
 
             $this->validate($request, $validation_rules);
