@@ -78,7 +78,7 @@ trait StoresAndUpdatesModels
                 $validation_rules = $validation_rules[$method];
             }
 
-            if($model) {
+            if($key) {
                 foreach($validation_rules as $attribute=>&$rules) {
                     $rules = str_replace('{key}', $key, $rules);
                 }
