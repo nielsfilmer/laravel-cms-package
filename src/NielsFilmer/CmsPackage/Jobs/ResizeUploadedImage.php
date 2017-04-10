@@ -32,19 +32,26 @@ class ResizeUploadedImage
     protected $extension;
 
     /**
+     * @var int
+     */
+    protected $quality;
+
+    /**
      * Create a new job instance.
      *
      * @param UploadedFile $file
      * @param $width
      * @param null $height
      * @param string $extension
+     * @param int $quality
      */
-    public function __construct(UploadedFile $file, $width = null, $height = null, $extension = "jpg")
+    public function __construct(UploadedFile $file, $width = null, $height = null, $extension = "jpg", $quality = 90)
     {
         $this->file = $file;
         $this->width = $width;
         $this->height = $height;
         $this->extension = $extension;
+        $this->quality = $quality;
     }
 
     /**
@@ -56,6 +63,7 @@ class ResizeUploadedImage
         if(!is_dir($tmp_dir)) mkdir($tmp_dir);
         $tmpfile = "$tmp_dir/" . uniqid('image-') . ".{$this->extension}";
 
+        /** @var \Intervention\Image\Image $image */
         $image = Image::make($this->file->getPathname());
 
         if(is_null($this->width)) {
@@ -72,7 +80,7 @@ class ResizeUploadedImage
             });
         }
 
-        $image->orientate()->save($tmpfile, 75);
+        $image->orientate()->save($tmpfile, $this->quality);
         return $tmpfile;
     }
 }

@@ -28,17 +28,24 @@ class HandleUploadedImage
     protected $extension;
 
     /**
+     * @var int
+     */
+    protected $quality;
+
+    /**
      * Create a new job instance.
      *
      * @param UploadedFile $file
      * @param array $config
      * @param $extension
+     * @param int $quality
      */
-    public function __construct(UploadedFile $file, array $config, $extension = null)
+    public function __construct(UploadedFile $file, array $config, $extension = null, $quality = 90)
     {
         $this->config = $config;
         $this->file = $file;
         $this->extension = $extension;
+        $this->quality = $quality;
     }
 
     /**
@@ -54,7 +61,7 @@ class HandleUploadedImage
         if(isset($this->config['size'])) {
             $width      = $this->config['size']['width'];
             $height     = $this->config['size']['height'];
-            $local_path = dispatch( new ResizeUploadedImage( $this->file, $width, $height, $extension ) );
+            $local_path = dispatch( new ResizeUploadedImage( $this->file, $width, $height, $extension, $this->quality ) );
         } else {
             $local_path = $this->file->getPathname();
         }
