@@ -65,17 +65,29 @@ class ResizeUploadedImage
 
         /** @var \Intervention\Image\Image $image */
         $image = Image::make($this->file->getPathname());
+        $org_width = $image->width();
+        $org_height = $image->height();
 
-        if(is_null($this->width)) {
+        if(!is_null($this->width) && !is_null($this->height)) {
+            if($org_width > $this->width && $org_height > $this->height) {
+                $image->fit($this->width, $this->height, function ($constraint) {
+                    $constraint->upsize();
+                });
+            } else if($org_width > $this->width) {
+                $image->widen($this->width, function ($constraint) {
+                    $constraint->upsize();
+                });
+            } else if($org_height > $this->height) {
+                $image->heighten($this->height, function ($constraint) {
+                    $constraint->upsize();
+                });
+            }
+        } else if(is_null($this->width) && $org_height > $this->height) {
             $image->heighten($this->height, function ($constraint) {
                 $constraint->upsize();
             });
-        } else if (is_null($this->height)) {
+        } else if (is_null($this->height) && $org_width > $this->width) {
             $image->widen($this->width, function ($constraint) {
-                $constraint->upsize();
-            });
-        } else {
-            $image->fit($this->width, $this->height, function ($constraint) {
                 $constraint->upsize();
             });
         }
