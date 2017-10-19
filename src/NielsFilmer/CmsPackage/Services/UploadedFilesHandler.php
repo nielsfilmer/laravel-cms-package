@@ -12,6 +12,7 @@ namespace NielsFilmer\CmsPackage\Services;
 use Illuminate\Bus\Queueable;
 use Illuminate\Filesystem\FilesystemManager;
 use Illuminate\Http\UploadedFile;
+use Intervention\Image\Facades\Image;
 
 
 class UploadedFilesHandler
@@ -80,7 +81,7 @@ class UploadedFilesHandler
         if(isset($config['size'])) {
             $width      = $config['size']['width'];
             $height     = $config['size']['height'];
-            $local_path = dispatch( new ResizeUploadedImage( $file, $width, $height, $extension, $quality ) );
+            $local_path = $this->resize( $file, $width, $height, $extension, $quality );
             $destructive = true;
         } else {
             $local_path = $file->getPathname();
