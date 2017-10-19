@@ -14,7 +14,7 @@ use Illuminate\Filesystem\FilesystemManager;
 use Illuminate\Http\UploadedFile;
 
 
-class UploadedImageHandler
+class UploadedFilesHandler
 {
     /**
      * @param UploadedFile $file
