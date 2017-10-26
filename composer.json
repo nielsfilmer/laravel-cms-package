@@ -32,5 +32,12 @@
             "NielsFilmer\\": "src/NielsFilmer"
         }
     },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "NielsFilmer\\CmsPackage\\CmsPackageServiceProvider"
+            ]
+        }
+    },
     "minimum-stability": "stable"
 }

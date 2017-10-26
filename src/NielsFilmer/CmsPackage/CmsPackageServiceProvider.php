@@ -1,6 +1,8 @@
 <?php namespace NielsFilmer\CmsPackage;
 
 use Illuminate\Support\ServiceProvider;
+use Laracasts\Flash\FlashServiceProvider;
+use NielsFilmer\EloquentLister\EloquentListerServiceProvider;
 
 class CmsPackageServiceProvider extends ServiceProvider {
 
@@ -31,7 +33,8 @@ class CmsPackageServiceProvider extends ServiceProvider {
      */
     public function register()
     {
-
+        $this->app->register(FlashServiceProvider::class);
+        $this->app->register(EloquentListerServiceProvider::class);
     }
 
     /**
