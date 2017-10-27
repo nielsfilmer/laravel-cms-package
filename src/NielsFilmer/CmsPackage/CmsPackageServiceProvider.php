@@ -3,6 +3,7 @@
 use Illuminate\Support\ServiceProvider;
 use Laracasts\Flash\FlashServiceProvider;
 use NielsFilmer\EloquentLister\EloquentListerServiceProvider;
+use Kris\LaravelFormBuilder\FormBuilderServiceProvider;
 
 class CmsPackageServiceProvider extends ServiceProvider {
 
