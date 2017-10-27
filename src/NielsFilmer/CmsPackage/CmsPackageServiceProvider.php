@@ -35,6 +35,7 @@ class CmsPackageServiceProvider extends ServiceProvider {
     {
         $this->app->register(FlashServiceProvider::class);
         $this->app->register(EloquentListerServiceProvider::class);
+        $this->app->register(FormBuilderServiceProvider::class);
     }
 
     /**
