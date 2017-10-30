@@ -18,6 +18,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Route;
 use Kris\LaravelFormBuilder\Form;
 use Kris\LaravelFormBuilder\FormBuilder;
+use NielsFilmer\CmsPackage\Lists\DefaultList;
 use NielsFilmer\EloquentLister\ListBuilder;
 use NielsFilmer\EloquentLister\TableList;
 
@@ -194,7 +195,16 @@ abstract class CmsController extends Controller
             $list_data = [];
         }
 
-        $list = $listbuilder->build(new $this->list_class, $collection, [
+        if(is_null($this->list_class)) {
+            $list_class = new DefaultList($this->display_attribute);
+        } else if(is_string($this->list_class)) {
+            $list_class = new $this->list_class;
+        } else {
+            $list_class = $this->list_class;
+        }
+
+
+        $list = $listbuilder->build($list_class, $collection, [
             'show_action' => false,
             'slug' => $listslug,
             'data' => $list_data,
