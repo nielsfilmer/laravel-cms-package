@@ -10,6 +10,7 @@ namespace NielsFilmer\CmsPackage;
 
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -184,40 +185,22 @@ abstract class CmsController extends Controller
         $args = $request->route()->parameters();
 
         $slug = (empty($this->slug)) ? substr($request->getPathInfo(), 1) : $this->slug;
-        $listslug = (empty($this->list_slug)) ? $slug : $this->list_slug;
+        $list_slug = (empty($this->list_slug)) ? $slug : $this->list_slug;
 
         $collection = $this->getListQuery($request, $args);
         $total = $collection->total();
-
-        if(method_exists($this, 'getListData')) {
-            $list_data = $this->getListData($request, $args);
-        } else {
-            $list_data = [];
-        }
-
-        if(is_null($this->list_class)) {
-            $list_class = new DefaultList($this->display_attribute);
-        } else if(is_string($this->list_class)) {
-            $list_class = new $this->list_class;
-        } else {
-            $list_class = $this->list_class;
-        }
-
+        $list_data = $this->getListData($request, $args);
+        $list_class = $this->getListClass();
 
         $list = $listbuilder->build($list_class, $collection, [
             'show_action' => false,
-            'slug' => $listslug,
+            'slug' => $list_slug,
             'data' => $list_data,
         ]);
         $filter = $this->list_filter;
         $show_add = $this->show_add;
 
-        if (method_exists($this, 'getIndexBreadcrumb')) {
-            $heading = $this->getIndexBreadcrumb($request, $args, $total);
-        } else {
-            $heading = $this->makeBreadcrumb('index', $args, $total);
-        }
-
+        $heading = $this->getIndexBreadcrumb($request, $args, $total);
         $object_name = $this->object_name;
 
         if($request->ajax()) {
@@ -228,6 +211,46 @@ abstract class CmsController extends Controller
             $view    = $this->list_view;
             return view('cms-package::default-resources.layout-extender', compact('list', 'heading', 'filter', 'show_add', 'args', 'object_name', 'layout', 'section', 'view', 'total', 'request', 'list_data'));
         }
+    }
+
+
+    /**
+     * @param Request $request
+     * @param array $args
+     * @return array
+     */
+    protected function getListData(Request $request, $args = [])
+    {
+        return [];
+    }
+
+
+    /**
+     * @param Request $request
+     * @param array $args
+     * @param $total
+     * @return array
+     */
+    protected function getIndexBreadcrumb(Request $request, $args = [], $total)
+    {
+        return $this->makeBreadcrumb('index', $args, $total);
+    }
+
+
+    /**
+     * @return DefaultList|TableList
+     */
+    protected function getListClass()
+    {
+        if(is_null($this->list_class)) {
+            $list_class = new DefaultList($this->display_attribute);
+        } else if(is_string($this->list_class)) {
+            $list_class = new $this->list_class;
+        } else {
+            $list_class = $this->list_class;
+        }
+
+        return $list_class;
     }
 
 
@@ -243,12 +266,8 @@ abstract class CmsController extends Controller
 
         $route = Route::getCurrentRoute()->getName();
 
-        if(method_exists($this, 'getCreateFormData')) {
-            $form_data = $this->getCreateFormData($request, $args);
-            $form_data = array_merge(['prev_url' => $referer], $form_data);
-        } else {
-            $form_data = ['prev_url' => $referer];
-        }
+        $form_data = $this->getCreateFormData($request, $args);
+        $form_data = array_merge(['prev_url' => $referer], $form_data);
 
         $url = (empty($this->route_store)) ? route(str_replace('create', 'store', $route), $args) : $this->route_store;
 
@@ -258,11 +277,7 @@ abstract class CmsController extends Controller
             'data' => $form_data,
         ]);
 
-        if(method_exists($this, 'getCreateBreadcrumb')) {
-            $breadcrumb = $this->getCreateBreadcrumb($request, $args);
-        } else {
-            $breadcrumb = $this->makeBreadcrumb('create', $args);
-        }
+        $breadcrumb = $this->getCreateBreadcrumb($request, $args);
 
         if($request->ajax()) {
             return view($this->form_view, compact('form', 'breadcrumb', 'args', 'layout', 'section', 'request', 'form_data'));
@@ -272,6 +287,28 @@ abstract class CmsController extends Controller
             $view    = $this->form_view;
             return view('cms-package::default-resources.layout-extender', compact('form', 'breadcrumb', 'args', 'layout', 'section', 'layout', 'section', 'view', 'request', 'form_data'));
         }
+    }
+
+
+    /**
+     * @param Request $request
+     * @param array $args
+     * @return array
+     */
+    protected function getCreateFormData(Request $request, $args = [])
+    {
+        return [];
+    }
+
+
+    /**
+     * @param Request $request
+     * @param array $args
+     * @return array
+     */
+    protected function getCreateBreadcrumb(Request $request, $args = [])
+    {
+        return $this->makeBreadcrumb('create', $args);
     }
 
 
@@ -287,28 +324,12 @@ abstract class CmsController extends Controller
         $formbuilder = app(FormBuilder::class);
         $args = $request->route()->parameters();
 
-        if(is_null($this->args_id_index)) {
-            $id = end($args);
-        } else {
-            $id = $args[$this->args_id_index];
-        }
-
         $referer = url()->previous();
         $route = Route::getCurrentRoute()->getName();
+        $model = $this->getEditModel($request, $args);
 
-        if(method_exists($this, 'getEditModel')) {
-            $model = $this->getEditModel($request, $id, $args);
-        } else {
-            $class = $this->class;
-            $model = $class::findOrFail($id);
-        }
-
-        if(method_exists($this, 'getEditFormData')) {
-            $form_data = $this->getEditFormData($model, $request, $args);
-            $form_data = array_merge(['prev_url' => $referer], $form_data);
-        } else {
-            $form_data = ['prev_url' => $referer];
-        }
+        $form_data = $this->getEditFormData($model, $request, $args);
+        $form_data = array_merge(['prev_url' => $referer], $form_data);
 
         $url = (empty($this->route_update)) ? route(str_replace('edit', 'update', $route), $args) : $this->route_update;
 
@@ -319,13 +340,7 @@ abstract class CmsController extends Controller
             'model' => $model,
         ]);
 
-        if(method_exists($this, 'getEditBreadcrumb')) {
-            $breadcrumb = $this->getEditBreadcrumb($model, $request, $args);
-        } else {
-            $display_attribute = $this->display_attribute;
-            $name = $model->$display_attribute;
-            $breadcrumb = $this->makeBreadcrumb('edit', $args, $name);
-        }
+        $breadcrumb = $this->getEditBreadcrumb($model, $request, $args);
 
         if($request->ajax()) {
             return view($this->form_view, compact('form', 'breadcrumb', 'model', 'args', 'layout', 'section', 'request', 'form_data'));
@@ -335,6 +350,50 @@ abstract class CmsController extends Controller
             $view    = $this->form_view;
             return view('cms-package::default-resources.layout-extender', compact('form', 'breadcrumb', 'model', 'args', 'layout', 'section', 'layout', 'section', 'view', 'request', 'form_data'));
         }
+    }
+
+
+    /**
+     * @param Request $request
+     * @param array $args
+     * @return mixed
+     */
+    protected function getEditModel(Request $request, $args = [])
+    {
+        if(is_null($this->args_id_index)) {
+            $id = end($args);
+        } else {
+            $id = $args[$this->args_id_index];
+        }
+
+        $class = $this->class;
+        return $class::findOrFail($id);
+    }
+
+
+    /**
+     * @param Model $model
+     * @param Request $request
+     * @param array $args
+     * @return array
+     */
+    protected function getEditFormData(Model $model, Request $request, $args = [])
+    {
+        return [];
+    }
+
+
+    /**
+     * @param Model $model
+     * @param Request $request
+     * @param array $args
+     * @return array
+     */
+    protected function getEditBreadcrumb(Model $model, Request $request, $args = [])
+    {
+        $display_attribute = $this->display_attribute;
+        $name = $model->$display_attribute;
+        return $this->makeBreadcrumb('edit', $args, $name);
     }
 
 
