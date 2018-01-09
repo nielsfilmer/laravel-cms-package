@@ -11,7 +11,7 @@
 @if ($showField)
     @if(!empty($options['value']))
         <div>
-            <img src="{{ $options['value'] }}" class="form-image-file" />
+            <img src="{{ $options['value'] }}" class="form-image-file" style="max-width: 100%" />
         </div>
     @endif
 
